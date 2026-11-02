@@ -3,405 +3,232 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#111111">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101d2b">
 <title>Rust Companion</title>
 <style>
+:root{color-scheme:dark;--accent:#ff791c;--ice:#8fd3ff;--text:#eaf4ff;--muted:#a5bed2;--border:#456783;--panel:#14283bdd}
 *{box-sizing:border-box}
-body{margin:0;background:#101010;color:#eee;font-family:Arial,sans-serif}
-header{padding:22px 18px;background:#181818;border-bottom:1px solid #333}
+html{min-height:100%;background:#101d2b}
+body{margin:0;min-height:100vh;min-height:100dvh;background:linear-gradient(180deg,#192d40,#080d14);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+#video-background{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;opacity:1;transition:opacity .25s}
+#video-background video{width:100%;height:100%;object-fit:cover}
+body:not(.on-home) #video-background{opacity:0;visibility:hidden}
+#video-background:after{content:"";position:absolute;inset:0;background:linear-gradient(#08111c44,#08111caa)}
+header,nav,main,footer{position:relative;z-index:1}
+header{padding:22px 18px;background:#0a1420ef;border-bottom:1px solid #405a70}
 .logo{font-size:25px;font-weight:900;letter-spacing:1px}
-.logo span{color:#ff791c}
-.subtitle{color:#888;font-size:12px;margin-top:5px}
-main{padding:20px;max-width:850px;margin:auto}
+.logo span,h2 span{color:var(--ice)}
+.subtitle{font-size:12px;color:#9bb8d0;margin-top:5px}
+nav{display:flex;gap:6px;overflow-x:auto;padding:13px;background:#0c1622eb;backdrop-filter:blur(12px);border-bottom:1px solid #49647b;position:sticky;top:0;z-index:10;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+nav::-webkit-scrollbar{display:none}
+button{background:var(--accent);color:#111;border:0;border-radius:5px;padding:12px 17px;font-weight:800;cursor:pointer}
+nav button{flex-shrink:0;white-space:nowrap;background:transparent;color:#c6d5e2;text-transform:uppercase;letter-spacing:.5px;border-bottom:3px solid transparent}
+nav button.active{background:#304b63;color:#fff;border-bottom-color:var(--accent)}
+button:active,.card:active{transform:scale(.97)}
+button:focus-visible,.card:focus-visible,input:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
+main{max-width:850px;margin:auto;padding:20px}
 h2{font-size:23px}
-h2 span{color:#ff791c}
-.welcome{background:linear-gradient(130deg,#292019,#171717);padding:23px;border:1px solid #49301e;border-radius:15px}
-.welcome p{color:#aaa;font-size:14px}
-.tag{color:#ff8b38;font-size:11px;font-weight:bold}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px}
-.card{background:#1c1c1c;border:1px solid #333;border-radius:13px;padding:18px;min-height:125px;cursor:pointer;transition:.2s}
-.card:active{transform:scale(.97)}
-.card .emoji{font-size:27px}
-.card h3{font-size:15px;margin:12px 0 5px}
-.card p{font-size:12px;color:#888;margin:0}
-button{background:#ff791c;color:#111;border:0;padding:12px 17px;border-radius:8px;font-weight:bold;cursor:pointer}
-nav{display:flex;gap:8px;overflow-x:auto;padding:13px;background:#181818;position:sticky;top:0;z-index:2}
-nav button{white-space:nowrap;background:#292929;color:#ddd}
-nav button.active{background:#ff791c;color:#111}
 .section{display:none;margin-top:22px}
 .section.active{display:block}
-.panel{background:#1c1c1c;border:1px solid #333;border-radius:13px;padding:18px;margin-top:12px}
-input{width:100%;padding:13px;background:#101010;color:white;border:1px solid #444;border-radius:8px;margin:9px 0}
-.result{color:#ff8b38;font-weight:bold;margin-top:12px}
-footer{text-align:center;color:#666;padding:35px;font-size:12px}
-@media(min-width:650px){.grid{grid-template-columns:repeat(3,1fr)}}
-/* WINTER THEME */
-body {
-  background:
-    radial-gradient(ellipse at top, #263d55 0%, transparent 55%),
-    linear-gradient(180deg, #101d2b, #080d14);
-  color: #eaf4ff;
-}
-
-header {
-  background: rgba(12, 25, 39, 0.96);
-  border-bottom: 1px solid #45627d;
-}
-
-.logo span,
-h2 span {
-  color: #8fd3ff;
-}
-
-.subtitle {
-  color: #9bb8d0;
-}
-
-nav {
-  background: #142436;
-  border-bottom: 1px solid #36516b;
-}
-
-nav button {
-  color: #b9d4e9;
-}
-
-nav button.active,
-nav button:hover {
-  background: #294663;
-  color: #ffffff;
-}
-
-.panel,
-.welcome,
-.card {
-  background: linear-gradient(145deg, #20364b, #111e2c);
-  border: 1px solid #456783;
-  color: #eaf4ff;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-
-.tag {
-  color: #9bdcff;
-}
-
-button {
-  border-color: #6285a3;
-}
-
-button:hover {
-  background: #345675;
-  color: white;
-}
-
-input,
-textarea {
-  background: #101d2b;
-  color: #eaf4ff;
-  border: 1px solid #456783;
-}
-
-::selection {
-  background: #5b9bc7;
-  color: white;
-}
-
-/* RUST WINTER BACKGROUND */
-body:has(#home.active) {
-  background:
-    linear-gradient(
-      rgba(8, 17, 28, 0.25),
-      rgba(8, 17, 28, 0.65)
-    ),
-    url("DB3F1346-95F6-440B-A6B0-BD898BC33187.jpeg")
-    center center / cover fixed;
-  background-color: #101d2b;
-}
-
-.welcome {
-  background: rgba(16, 32, 48, 0.88);
-  backdrop-filter: blur(8px);
-}
-  
-  html {
-  background: #101d2b;
-  min-height: 100%;
-}
-
-body {
-  min-height: 100vh;
-  min-height: 100dvh;
-}
-
-/* RUST GAME MENU */
-header {
-  background: rgba(10, 20, 32, 0.94);
-  border-bottom: 1px solid #405a70;
-}
-
-nav {
-  background: rgba(12, 22, 34, 0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid #49647b;
-  gap: 6px;
-}
-
-nav button {
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 3px;
-  color: #c6d5e2;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: all 0.2s ease;
-}
-
-nav button.active {
-  background: #304b63;
-  border-bottom: 3px solid #ff791c;
-  color: white;
-}
-
-nav button:active {
-  transform: scale(0.96);
-}
-
-.welcome {
-  border-left: 4px solid #ff791c;
-  border-radius: 4px;
-}
-
-.card {
-  border-radius: 4px;
-  transition: transform 0.2s ease;
-}
-
-.card:active {
-  transform: scale(0.97);
-}
-
-
-/* WINTER MENU ANIMATIONS */
-#home .welcome {
-  padding: 24px 20px;
-  background: rgba(12, 25, 40, 0.76);
-  backdrop-filter: blur(5px);
-}
-
-#home .welcome h2 {
-  font-size: 22px;
-  line-height: 1.25;
-}
-
-#home .grid {
-  gap: 10px;
-}
-
-#home .card {
-  padding: 16px;
-  background: rgba(16, 32, 48, 0.78);
-  backdrop-filter: blur(5px);
-}
-
-#home .card:active {
-  transform: scale(0.96);
-}
-
- 
-/* FIXED GAME NAVIGATION */
-nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  width: 100%;
-  box-sizing: border-box;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-nav::-webkit-scrollbar {
-  display: none;
-}
-
-nav button {
-  flex-shrink: 0;
-}
-
-
-
-/* CINEMATIC WINTER BACKGROUND */
-body:has(#home.active) {
-  background-image: none;
-}
-
-body:has(#home.active)::before {
-  content: "";
-  position: fixed;
-  inset: -5%;
-  z-index: 0;
-  pointer-events: none;
-
-  background:
-    linear-gradient(
-      rgba(8, 17, 28, 0.22),
-      rgba(8, 17, 28, 0.65)
-    ),
-    url("DB3F1346-95F6-440B-A6B0-BD898BC33187.jpeg")
-    center / cover no-repeat;
-
-  animation: winterCamera 35s ease-in-out infinite alternate;
-}
-
-body:has(#home.active) > * {
-  position: relative;
-  z-index: 1;
-}
-
-@keyframes winterCamera {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.08) translateX(-1%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body:has(#home.active)::before {
-    animation: none;
-  }
-}
-
-
-#winter-video {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
-  pointer-events: none;
-}
-
-body {
-  isolation: isolate;
-}
-
-body:has(#home.active)::before {
-  display: none !important;
-}
-
-body:not(:has(#home.active)) #winter-video {
-  display: none;
-}
-
-
+.welcome,.panel,.card{background:var(--panel);border:1px solid var(--border);box-shadow:0 8px 25px #0004}
+.welcome{padding:24px 20px;border-left:4px solid var(--accent);border-radius:4px;backdrop-filter:blur(5px)}
+.welcome h2{font-size:22px;line-height:1.25}
+.welcome p,.card p{color:var(--muted)}
+.welcome p{font-size:14px}
+.tag{color:#9bdcff;font-size:11px;font-weight:bold}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:20px}
+.card{padding:16px;min-height:125px;border-radius:4px;cursor:pointer;backdrop-filter:blur(5px)}
+.card .emoji{font-size:27px}
+.card h3{font-size:15px;margin:12px 0 5px}
+.card p{font-size:12px;margin:0}
+.panel{border-radius:8px;padding:18px;margin-top:12px}
+input{width:100%;padding:13px;background:#101d2b;color:var(--text);border:1px solid var(--border);border-radius:8px;margin:9px 0;font-size:16px}
+.result{color:#ff9d59;font-weight:bold;margin-top:12px}
+footer{text-align:center;color:#a0b0be;padding:35px;font-size:12px}
+.player{padding:8px 0;border-bottom:1px solid #45678355}
+@media(min-width:650px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
-<body>
-  <video id="winter-video" autoplay muted loop playsinline><source src="rust_winter_iphone_fixed.mov" type="video/quicktime"></video>
+
+<body class="on-home">
+<div id="video-background" aria-hidden="true">
+<video id="winter-video" autoplay muted loop playsinline preload="auto">
+<source src="rust_winter_iphone_fixed.mov" type="video/quicktime">
+</video>
+</div>
 <header>
- <div class="logo">RUST <span>COMPANION</span></div>
- <div class="subtitle">ТВОЙ ПОМОЩНИК В МИРЕ RUST</div>
+<div class="logo">RUST <span>COMPANION</span></div>
+<div class="subtitle">ТВОЙ ПОМОЩНИК В МИРЕ RUST</div>
 </header>
-<nav id="nav">
- <button class="active" onclick="show('home',this)">Главная</button>
- <button onclick="show('map',this)">Карта</button>
- <button onclick="show('team',this)">Команда</button>
- <button onclick="show('tools',this)">Инструменты</button>
+<nav id="nav" aria-label="Разделы сайта">
+<button class="active" data-page="home" onclick="show('home')">Главная</button>
+<button data-page="map" onclick="show('map')">Карта</button>
+<button data-page="team" onclick="show('team')">Команда</button>
+<button data-page="tools" onclick="show('tools')">Инструменты</button>
 </nav>
 <main>
 <section id="home" class="section active">
- <div class="welcome">
-  <div class="tag">SURVIVE • BUILD • DOMINATE</div>
-  <h2>Добро пожаловать в <span>Rust Companion</span></h2>
-  <p>Все необходимые инструменты для выживания в Rust — в одном месте.</p>
-  <button onclick="show('tools',document.querySelectorAll('nav button')[3])">Открыть инструменты</button>
- </div>
- <h2>Твои <span>инструменты</span></h2>
- <div class="grid">
-  <div class="card" onclick="show('map')"><div class="emoji">🗺️</div><h3>Карта Rust</h3><p>Координаты и метки</p></div>
-  <div class="card" onclick="show('team')"><div class="emoji">👥</div><h3>Команда</h3><p>Участники и игроки</p></div>
-  <div class="card" onclick="show('tools')"><div class="emoji">💣</div><h3>Калькулятор рейда</h3><p>Расчёт взрывчатки</p></div>
-  <div class="card" onclick="show('tools')"><div class="emoji">♻️</div><h3>Переработка</h3><p>Ресурсы и компоненты</p></div>
-  <div class="card" onclick="show('tools')"><div class="emoji">🔧</div><h3>Крафт</h3><p>Рецепты предметов</p></div>
-  <div class="card" onclick="show('tools')"><div class="emoji">🔔</div><h3>Уведомления</h3><p>События и сигналы</p></div>
- </div>
+<div class="welcome">
+<div class="tag">SURVIVE • BUILD • DOMINATE</div>
+<h2>Добро пожаловать в <span>Rust Companion</span></h2>
+<p>Все необходимые инструменты для выживания в Rust — в одном месте.</p>
+<button onclick="show('tools')">Открыть инструменты</button>
+</div>
+<h2>Твои <span>инструменты</span></h2>
+<div class="grid">
+<div class="card" role="button" tabindex="0" data-page="map" onclick="show('map')">
+<div class="emoji">🗺️</div>
+<h3>Карта Rust</h3>
+<p>Координаты и метки</p>
+</div>
+<div class="card" role="button" tabindex="0" data-page="team" onclick="show('team')">
+<div class="emoji">👥</div>
+<h3>Команда</h3>
+<p>Участники и игроки</p>
+</div>
+<div class="card" role="button" tabindex="0" data-page="tools" onclick="show('tools')">
+<div class="emoji">💣</div>
+<h3>Калькулятор рейда</h3>
+<p>Расчёт взрывчатки</p>
+</div>
+<div class="card" role="button" tabindex="0" data-page="tools" onclick="show('tools')">
+<div class="emoji">♻️</div>
+<h3>Переработка</h3>
+<p>Ресурсы и компоненты</p>
+</div>
+<div class="card" role="button" tabindex="0" data-page="tools" onclick="show('tools')">
+<div class="emoji">🔧</div>
+<h3>Крафт</h3>
+<p>Рецепты предметов</p>
+</div>
+<div class="card" role="button" tabindex="0" data-page="tools" onclick="show('tools')">
+<div class="emoji">🔔</div>
+<h3>Уведомления</h3>
+<p>События и сигналы</p>
+</div>
+</div>
 </section>
 
 <section id="map" class="section">
- <h2>🗺️ Карта <span>Rust</span></h2>
- <div class="panel">
-  <div class="tag">КАРТА СЕРВЕРА</div>
-  <p>Здесь будет интерактивная карта Rust с монументами, базами и метками.</p>
-  <p style="color:#ff8b38">Карта пока находится в разработке.</p>
- </div>
+<h2>🗺️ Карта <span>Rust</span></h2>
+<div class="panel">
+<div class="tag">КАРТА СЕРВЕРА</div>
+<p>Здесь будет интерактивная карта Rust с монументами, базами и метками.</p>
+<p class="result">Карта пока находится в разработке.</p>
+</div>
 </section>
 
 <section id="team" class="section">
- <h2>👥 Твоя <span>команда</span></h2>
- <div class="panel">
-  <p>Создай список своей команды.</p>
-  <input id="player" placeholder="Ник игрока">
-  <button onclick="addPlayer()">Добавить игрока</button>
-  <div id="players"></div>
- </div>
+<h2>👥 Твоя <span>команда</span></h2>
+<div class="panel">
+<p>Создай список своей команды.</p>
+<input id="player" maxlength="40" placeholder="Ник игрока">
+<button onclick="addPlayer()">Добавить игрока</button>
+<div id="players"></div>
+</div>
 </section>
 
 <section id="tools" class="section">
- <h2>⚙️ <span>Инструменты</span></h2>
- <div class="panel">
-  <h3>💣 Калькулятор рейда</h3>
-  <p>Укажи количество взрывчатки для расчёта.</p>
-  <input id="c4" type="number" min="0" placeholder="Количество C4">
-  <button onclick="raid()">Рассчитать</button>
-  <div class="result" id="raidResult"></div>
- </div>
- <div class="panel">
-  <h3>🔧 Калькулятор ресурсов</h3>
-  <input id="wood" type="number" min="0" placeholder="Количество дерева">
-  <input id="stone" type="number" min="0" placeholder="Количество камня">
-  <button onclick="resources()">Посчитать ресурсы</button>
-  <div class="result" id="resourceResult"></div>
- </div>
+<h2>⚙️ <span>Инструменты</span></h2>
+<div class="panel">
+<h3>💣 Калькулятор рейда</h3>
+<p>Укажи количество взрывчатки для расчёта.</p>
+<input id="c4" type="number" min="0" step="1" placeholder="Количество C4">
+<button onclick="raid()">Рассчитать</button>
+<div class="result" id="raidResult" aria-live="polite"></div>
+</div>
+<div class="panel">
+<h3>🔧 Калькулятор ресурсов</h3>
+<input id="wood" type="number" min="0" step="1" placeholder="Количество дерева">
+<input id="stone" type="number" min="0" step="1" placeholder="Количество камня">
+<button onclick="resources()">Посчитать ресурсы</button>
+<div class="result" id="resourceResult" aria-live="polite"></div>
+</div>
 </section>
 </main>
-<footer>RUST COMPANION © 2026<br>Неофициальный фанатский проект</footer>
+<footer>RUST COMPANION © 2026
+Неофициальный фанатский проект</footer>
+
 <script>
-function show(id,btn){
- document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
- document.getElementById(id).classList.add('active');
- document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
- if(btn)btn.classList.add('active');
+const video=document.getElementById('winter-video');
+
+function ensureVideo(){
+ if(video.paused){
+  const attempt=video.play();
+  if(attempt&&typeof attempt.catch==='function')
+   attempt.catch(()=>{});
+ }
+}
+
+function show(id){
+ const target=document.getElementById(id);
+ if(!target||!target.classList.contains('section'))return;
+
+ document.querySelectorAll('.section').forEach(s=>{
+  s.classList.toggle('active',s===target);
+ });
+
+ document.querySelectorAll('nav button').forEach(b=>{
+  const active=b.dataset.page===id;
+  b.classList.toggle('active',active);
+  if(active)b.setAttribute('aria-current','page');
+  else b.removeAttribute('aria-current');
+ });
+
+ document.body.classList.toggle('on-home',id==='home');
+ if(id==='home')ensureVideo();
  window.scrollTo(0,0);
 }
-window.addEventListener('pageshow', () => {
-  const video = document.getElementById('winter-video');
-  if (video) {
-    video.muted = true;
-    video.play().catch(() => {});
-  }
-});
+
 function addPlayer(){
- let input=document.getElementById('player');
- if(!input.value.trim())return;
- let p=document.createElement('p');
- p.textContent='👤 '+input.value;
+ const input=document.getElementById('player');
+ const name=input.value.trim();
+ if(!name)return;
+ const p=document.createElement('p');
+ p.className='player';
+ p.textContent='👤 '+name;
  document.getElementById('players').appendChild(p);
  input.value='';
 }
+
+function amount(id){
+ return Math.max(0,Math.floor(Number(document.getElementById(id).value)||0));
+}
+
 function raid(){
- let n=Math.max(0,Number(document.getElementById('c4').value)||0);
- document.getElementById('raidResult').textContent='C4: '+n+' шт. | Урон: '+(n*550)+' (условный расчёт)';
+ const n=amount('c4');
+ document.getElementById('raidResult').textContent=
+ 'C4: '+n+' шт. | Урон: '+(n*550)+' (условный расчёт)';
 }
+
 function resources(){
- let w=Number(document.getElementById('wood').value)||0;
- let s=Number(document.getElementById('stone').value)||0;
- document.getElementById('resourceResult').textContent='Дерево: '+w.toLocaleString('ru')+' | Камень: '+s.toLocaleString('ru');
+ document.getElementById('resourceResult').textContent=
+ 'Дерево: '+amount('wood').toLocaleString('ru')+
+ ' | Камень: '+amount('stone').toLocaleString('ru');
 }
+
+document.querySelectorAll('.card[role="button"]').forEach(card=>{
+ card.addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key===' '){
+   e.preventDefault();
+   show(card.dataset.page);
+  }
+ });
+});
+
+document.addEventListener('visibilitychange',()=>{
+ if(!document.hidden&&document.body.classList.contains('on-home'))
+  ensureVideo();
+});
+
+window.addEventListener('pageshow',()=>{
+ if(document.body.classList.contains('on-home'))
+  ensureVideo();
+});
+
+ensureVideo();
 </script>
 </body>
 </html>
