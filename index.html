@@ -36,9 +36,79 @@ input{width:100%;padding:13px;background:#101010;color:white;border:1px solid #4
 .result{color:#ff8b38;font-weight:bold;margin-top:12px}
 footer{text-align:center;color:#666;padding:35px;font-size:12px}
 @media(min-width:650px){.grid{grid-template-columns:repeat(3,1fr)}}
+/* WINTER THEME */
+body {
+  background:
+    radial-gradient(ellipse at top, #263d55 0%, transparent 55%),
+    linear-gradient(180deg, #101d2b, #080d14);
+  color: #eaf4ff;
+}
+
+header {
+  background: rgba(12, 25, 39, 0.96);
+  border-bottom: 1px solid #45627d;
+}
+
+.logo span,
+h2 span {
+  color: #8fd3ff;
+}
+
+.subtitle {
+  color: #9bb8d0;
+}
+
+nav {
+  background: #142436;
+  border-bottom: 1px solid #36516b;
+}
+
+nav button {
+  color: #b9d4e9;
+}
+
+nav button.active,
+nav button:hover {
+  background: #294663;
+  color: #ffffff;
+}
+
+.panel,
+.welcome,
+.card {
+  background: linear-gradient(145deg, #20364b, #111e2c);
+  border: 1px solid #456783;
+  color: #eaf4ff;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.tag {
+  color: #9bdcff;
+}
+
+button {
+  border-color: #6285a3;
+}
+
+button:hover {
+  background: #345675;
+  color: white;
+}
+
+input,
+textarea {
+  background: #101d2b;
+  color: #eaf4ff;
+  border: 1px solid #456783;
+}
+
+::selection {
+  background: #5b9bc7;
+  color: white;
+}
 </style>
 </head>
-<body>
+<bod>
 <header>
  <div class="logo">RUST <span>COMPANION</span></div>
  <div class="subtitle">ТВОЙ ПОМОЩНИК В МИРЕ RUST</div>
