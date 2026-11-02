@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111111">
+<title>Rust Companion</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101010;color:#eee;font-family:Arial,sans-serif}
+header{padding:22px 18px;background:#181818;border-bottom:1px solid #333}
+.logo{font-size:25px;font-weight:900;letter-spacing:1px}
+.logo span{color:#ff791c}
+.subtitle{color:#888;font-size:12px;margin-top:5px}
+main{padding:20px;max-width:850px;margin:auto}
+h2{font-size:23px}
+h2 span{color:#ff791c}
+.welcome{background:linear-gradient(130deg,#292019,#171717);padding:23px;border:1px solid #49301e;border-radius:15px}
+.welcome p{color:#aaa;font-size:14px}
+.tag{color:#ff8b38;font-size:11px;font-weight:bold}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px}
+.card{background:#1c1c1c;border:1px solid #333;border-radius:13px;padding:18px;min-height:125px;cursor:pointer;transition:.2s}
+.card:active{transform:scale(.97)}
+.card .emoji{font-size:27px}
+.card h3{font-size:15px;margin:12px 0 5px}
+.card p{font-size:12px;color:#888;margin:0}
+button{background:#ff791c;color:#111;border:0;padding:12px 17px;border-radius:8px;font-weight:bold;cursor:pointer}
+nav{display:flex;gap:8px;overflow-x:auto;padding:13px;background:#181818;position:sticky;top:0;z-index:2}
+nav button{white-space:nowrap;background:#292929;color:#ddd}
+nav button.active{background:#ff791c;color:#111}
+.section{display:none;margin-top:22px}
+.section.active{display:block}
+.panel{background:#1c1c1c;border:1px solid #333;border-radius:13px;padding:18px;margin-top:12px}
+input{width:100%;padding:13px;background:#101010;color:white;border:1px solid #444;border-radius:8px;margin:9px 0}
+.result{color:#ff8b38;font-weight:bold;margin-top:12px}
+footer{text-align:center;color:#666;padding:35px;font-size:12px}
+@media(min-width:650px){.grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">RUST <span>COMPANION</span></div>
+ <div class="subtitle">ТВОЙ ПОМОЩНИК В МИРЕ RUST</div>
+</header>
+<nav id="nav">
+ <button class="active" onclick="show('home',this)">Главная</button>
+ <button onclick="show('map',this)">Карта</button>
+ <button onclick="show('team',this)">Команда</button>
+ <button onclick="show('tools',this)">Инструменты</button>
+</nav>
+<main>
+<section id="home" class="section active">
+ <div class="welcome">
+  <div class="tag">SURVIVE • BUILD • DOMINATE</div>
+  <h2>Добро пожаловать в <span>Rust Companion</span></h2>
+  <p>Все необходимые инструменты для выживания в Rust — в одном месте.</p>
+  <button onclick="show('tools',document.querySelectorAll('nav button')[3])">Открыть инструменты</button>
+ </div>
+ <h2>Твои <span>инструменты</span></h2>
+ <div class="grid">
+  <div class="card" onclick="show('map')"><div class="emoji">🗺️</div><h3>Карта Rust</h3><p>Координаты и метки</p></div>
+  <div class="card" onclick="show('team')"><div class="emoji">👥</div><h3>Команда</h3><p>Участники и игроки</p></div>
+  <div class="card" onclick="show('tools')"><div class="emoji">💣</div><h3>Калькулятор рейда</h3><p>Расчёт взрывчатки</p></div>
+  <div class="card" onclick="show('tools')"><div class="emoji">♻️</div><h3>Переработка</h3><p>Ресурсы и компоненты</p></div>
+  <div class="card" onclick="show('tools')"><div class="emoji">🔧</div><h3>Крафт</h3><p>Рецепты предметов</p></div>
+  <div class="card" onclick="show('tools')"><div class="emoji">🔔</div><h3>Уведомления</h3><p>События и сигналы</p></div>
+ </div>
+</section>
+
+<section id="map" class="section">
+ <h2>🗺️ Карта <span>Rust</span></h2>
+ <div class="panel">
+  <div class="tag">КАРТА СЕРВЕРА</div>
+  <p>Здесь будет интерактивная карта Rust с монументами, базами и метками.</p>
+  <p style="color:#ff8b38">Карта пока находится в разработке.</p>
+ </div>
+</section>
+
+<section id="team" class="section">
+ <h2>👥 Твоя <span>команда</span></h2>
+ <div class="panel">
+  <p>Создай список своей команды.</p>
+  <input id="player" placeholder="Ник игрока">
+  <button onclick="addPlayer()">Добавить игрока</button>
+  <div id="players"></div>
+ </div>
+</section>
+
+<section id="tools" class="section">
+ <h2>⚙️ <span>Инструменты</span></h2>
+ <div class="panel">
+  <h3>💣 Калькулятор рейда</h3>
+  <p>Укажи количество взрывчатки для расчёта.</p>
+  <input id="c4" type="number" min="0" placeholder="Количество C4">
+  <button onclick="raid()">Рассчитать</button>
+  <div class="result" id="raidResult"></div>
+ </div>
+ <div class="panel">
+  <h3>🔧 Калькулятор ресурсов</h3>
+  <input id="wood" type="number" min="0" placeholder="Количество дерева">
+  <input id="stone" type="number" min="0" placeholder="Количество камня">
+  <button onclick="resources()">Посчитать ресурсы</button>
+  <div class="result" id="resourceResult"></div>
+ </div>
+</section>
+</main>
+<footer>RUST COMPANION © 2026<br>Неофициальный фанатский проект</footer>
+<script>
+function show(id,btn){
+ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+ if(btn)btn.classList.add('active');
+ window.scrollTo(0,0);
+}
+function addPlayer(){
+ let input=document.getElementById('player');
+ if(!input.value.trim())return;
+ let p=document.createElement('p');
+ p.textContent='👤 '+input.value;
+ document.getElementById('players').appendChild(p);
+ input.value='';
+}
+function raid(){
+ let n=Math.max(0,Number(document.getElementById('c4').value)||0);
+ document.getElementById('raidResult').textContent='C4: '+n+' шт. | Урон: '+(n*550)+' (условный расчёт)';
+}
+function resources(){
+ let w=Number(document.getElementById('wood').value)||0;
+ let s=Number(document.getElementById('stone').value)||0;
+ document.getElementById('resourceResult').textContent='Дерево: '+w.toLocaleString('ru')+' | Камень: '+s.toLocaleString('ru');
+}
+</script>
+</body>
+</html>
