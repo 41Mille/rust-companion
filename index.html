@@ -492,6 +492,15 @@ function renderTrackedPlayers() {
       removeTrackedPlayer(player.id);
     });
 
+const profile = document.createElement('a');
+profile.href = 'https://steamcommunity.com/profiles/' + player.id;
+profile.target = '_blank';
+profile.rel = 'noopener noreferrer';
+profile.textContent = 'Открыть Steam-профиль';
+profile.style.cssText =
+  'display:block;color:#8fd3ff;margin:12px 0;';
+card.appendChild(profile);
+
     card.append(name, note, button);
     container.appendChild(card);
   });
