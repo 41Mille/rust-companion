@@ -182,6 +182,65 @@ nav button:active {
   transform: scale(0.97);
 }
 
+
+/* WINTER MENU ANIMATIONS */
+#home .welcome {
+  padding: 24px 20px;
+  background: rgba(12, 25, 40, 0.76);
+  backdrop-filter: blur(5px);
+  animation: winterFade 0.7s ease-out both;
+}
+
+#home .welcome h2 {
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+#home .grid {
+  gap: 10px;
+}
+
+#home .card {
+  padding: 16px;
+  background: rgba(16, 32, 48, 0.78);
+  backdrop-filter: blur(5px);
+  animation: winterFade 0.6s ease-out both;
+}
+
+#home .card:active {
+  transform: scale(0.96);
+}
+
+#home .card:nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+#home .card:nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+#home .card:nth-child(4) {
+  animation-delay: 0.24s;
+}
+
+@keyframes winterFade {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #home .welcome,
+  #home .card {
+    animation: none;
+  }
+}
+  
 </style>
 </head>
 <bod>
