@@ -261,6 +261,46 @@ nav button {
   flex-shrink: 0;
 }
 
+
+/* CINEMATIC WINTER BACKGROUND */
+body:has(#home.active) {
+  background-image: none;
+}
+
+body:has(#home.active)::before {
+  content: "";
+  position: fixed;
+  inset: -5%;
+  z-index: -1;
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      rgba(8, 17, 28, 0.22),
+      rgba(8, 17, 28, 0.65)
+    ),
+    url("DB3F1346-95F6-440B-A6B0-BD898BC33187.jpeg")
+    center / cover no-repeat;
+
+  animation: winterCamera 35s ease-in-out infinite alternate;
+}
+
+@keyframes winterCamera {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08) translateX(-1%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body:has(#home.active)::before {
+    animation: none;
+  }
+}
+
+
 </style>
 </head>
 <bod>
