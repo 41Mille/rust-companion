@@ -307,6 +307,29 @@ body:has(#home.active) > * {
 }
 
 
+#winter-video {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body {
+  isolation: isolate;
+}
+
+body:has(#home.active)::before {
+  display: none !important;
+}
+
+body:not(:has(#home.active)) #winter-video {
+  display: none;
+}
+
+
 </style>
 </head>
 <bod>
