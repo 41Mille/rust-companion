@@ -130,6 +130,52 @@ button:active {
 }
 
 </head>
+
+/* RUST PLAYER TRACKER */
+
+#tracker .panel {
+  border-left: 3px solid #ff791c;
+}
+
+#tracker input {
+  background: rgba(5,15,25,.85);
+  border: 1px solid #456783;
+}
+
+#trackedPlayers {
+  display: grid;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.tracked-player {
+  padding: 15px;
+  background: rgba(8,18,29,.85);
+  border: 1px solid #456783;
+  border-radius: 6px;
+  overflow-wrap: anywhere;
+}
+
+.tracked-player strong {
+  color: #8fd3ff;
+}
+
+.tracked-player p {
+  color: #a5bed2;
+  font-size: 13px;
+}
+
+.tracked-player button {
+  margin-top: 10px;
+  background: #a93226;
+  color: white;
+}
+
+#trackerMessage {
+  color: #ff9d59;
+  font-size: 13px;
+}
+
 </style>
 
 <body class="on-home">
@@ -199,6 +245,36 @@ button:active {
 <p>Здесь будет интерактивная карта Rust с монументами, базами и метками.</p>
 <p class="result">Карта пока находится в разработке.</p>
 </div>
+</section>
+
+<section id="tracker" class="section">
+  <h2>🎯 Трекер <span>игроков</span></h2>
+
+  <div class="panel">
+    <div class="tag">RUST PLAYER TRACKER</div>
+    <h3>Добавить игрока</h3>
+    <p>Введи Steam ID64 игрока (17 цифр).</p>
+
+    <input id="steamId" type="text"
+      inputmode="numeric"
+      maxlength="17"
+      placeholder="7656119XXXXXXXXXX">
+
+    <input id="playerNote" type="text"
+      maxlength="100"
+      placeholder="Заметка или название клана">
+
+    <button onclick="addTrackedPlayer()">
+      + Добавить игрока
+    </button>
+
+    <p id="trackerMessage" aria-live="polite"></p>
+  </div>
+
+  <div class="panel">
+    <h3>Отслеживаемые игроки</h3>
+    <div id="trackedPlayers"></div>
+  </div>
 </section>
 
 <section id="team" class="section">
@@ -310,6 +386,119 @@ window.addEventListener('pageshow',()=>{
 });
 
 ensureVideo();
+
+/* RUST PLAYER TRACKER */
+
+const trackerKey = 'rust_companion_players';
+
+function getTrackedPlayers() {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem(trackerKey) || '[]'
+    );
+    return Array.isArray(saved) ? saved : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveTrackedPlayers(players) {
+  try {
+    localStorage.setItem(
+      trackerKey,
+      JSON.stringify(players)
+    );
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function addTrackedPlayer() {
+  const idInput = document.getElementById('steamId');
+  const noteInput = document.getElementById('playerNote');
+  const message = document.getElementById('trackerMessage');
+
+  const id = idInput.value.trim();
+  const note = noteInput.value.trim();
+
+  if (!/^7656119\d{10}$/.test(id)) {
+    message.textContent =
+      'Введите корректный Steam ID64 из 17 цифр.';
+    return;
+  }
+
+  const players = getTrackedPlayers();
+
+  if (players.some(p => p.id === id)) {
+    message.textContent = 'Этот игрок уже добавлен.';
+    return;
+  }
+
+  players.push({ id, note });
+
+  if (!saveTrackedPlayers(players)) {
+    message.textContent =
+      'Не удалось сохранить список в браузере.';
+    return;
+  }
+
+  idInput.value = '';
+  noteInput.value = '';
+  message.textContent = 'Игрок добавлен!';
+  renderTrackedPlayers();
+}
+
+function removeTrackedPlayer(id) {
+  const players = getTrackedPlayers()
+    .filter(p => p.id !== id);
+
+  if (saveTrackedPlayers(players)) {
+    renderTrackedPlayers();
+  } else {
+    document.getElementById('trackerMessage')
+      .textContent = 'Не удалось сохранить изменения.';
+  }
+}
+
+function renderTrackedPlayers() {
+  const container =
+    document.getElementById('trackedPlayers');
+
+  if (!container) return;
+
+  container.replaceChildren();
+  const players = getTrackedPlayers();
+
+  if (!players.length) {
+    container.textContent =
+      'Пока нет отслеживаемых игроков.';
+    return;
+  }
+
+  players.forEach(player => {
+    const card = document.createElement('div');
+    card.className = 'tracked-player';
+
+    const name = document.createElement('strong');
+    name.textContent = 'Steam ID: ' + player.id;
+
+    const note = document.createElement('p');
+    note.textContent = player.note || 'Без заметки';
+
+    const button = document.createElement('button');
+    button.textContent = 'Удалить';
+    button.addEventListener('click', () => {
+      removeTrackedPlayer(player.id);
+    });
+
+    card.append(name, note, button);
+    container.appendChild(card);
+  });
+}
+
+renderTrackedPlayers();
+
 </script>
 </body>
 </html>
