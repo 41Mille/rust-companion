@@ -241,38 +241,24 @@ nav button:active {
   }
 }
   
-  
-/* ANIMATED WINTER SNOW */
-body:has(#home.active)::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 10;
-  opacity: 0.55;
-  background-image:
-    radial-gradient(2px 2px at 20px 30px, white 98%, transparent),
-    radial-gradient(3px 3px at 90px 100px, white 98%, transparent),
-    radial-gradient(2px 2px at 150px 60px, white 98%, transparent),
-    radial-gradient(2px 2px at 230px 170px, white 98%, transparent),
-    radial-gradient(3px 3px at 310px 90px, white 98%, transparent);
-  background-size: 340px 220px;
-  animation: snowfall 14s linear infinite;
+/* FIXED GAME NAVIGATION */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
 
-@keyframes snowfall {
-  from {
-    background-position: 0 -220px;
-  }
-  to {
-    background-position: 40px 220px;
-  }
+nav::-webkit-scrollbar {
+  display: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  body:has(#home.active)::before {
-    animation: none;
-  }
+nav button {
+  flex-shrink: 0;
 }
 
 </style>
