@@ -262,6 +262,7 @@ nav button {
 }
 
 
+
 /* CINEMATIC WINTER BACKGROUND */
 body:has(#home.active) {
   background-image: none;
@@ -271,7 +272,7 @@ body:has(#home.active)::before {
   content: "";
   position: fixed;
   inset: -5%;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
 
   background:
@@ -283,6 +284,11 @@ body:has(#home.active)::before {
     center / cover no-repeat;
 
   animation: winterCamera 35s ease-in-out infinite alternate;
+}
+
+body:has(#home.active) > * {
+  position: relative;
+  z-index: 1;
 }
 
 @keyframes winterCamera {
