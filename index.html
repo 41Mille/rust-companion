@@ -50,6 +50,86 @@ footer{text-align:center;color:#a0b0be;padding:35px;font-size:12px}
 @media(min-width:650px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
 </style>
+
+/* RUST COMPANION ANIMATIONS */
+
+@keyframes rustAppear {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Плавное появление */
+.section.active .welcome,
+.section.active .card,
+.section.active .panel {
+  animation: rustAppear .45s ease both;
+}
+
+/* Карточки появляются по очереди */
+.section.active .card:nth-child(2) {
+  animation-delay: .06s;
+}
+.section.active .card:nth-child(3) {
+  animation-delay: .12s;
+}
+.section.active .card:nth-child(4) {
+  animation-delay: .18s;
+}
+.section.active .card:nth-child(5) {
+  animation-delay: .24s;
+}
+.section.active .card:nth-child(6) {
+  animation-delay: .30s;
+}
+
+/* Плавные переходы */
+.card {
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+/* Оранжевое свечение */
+.card:active {
+  transform: scale(.96);
+  border-color: #ff791c;
+  box-shadow: 0 0 22px #ff791c66;
+}
+
+/* Анимация кнопок */
+button {
+  transition: transform .2s ease, filter .2s ease;
+}
+button:active {
+  transform: scale(.96);
+  filter: brightness(1.2);
+}
+
+/* Эффект при наведении с ПК */
+@media (hover:hover) {
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: #ff791c;
+    box-shadow: 0 8px 25px #ff791c33;
+  }
+}
+
+/* Учитываем настройки анимации */
+@media (prefers-reduced-motion:reduce) {
+  .section.active .welcome,
+  .section.active .card,
+  .section.active .panel {
+    animation: none;
+  }
+}
+
 </head>
 
 <body class="on-home">
