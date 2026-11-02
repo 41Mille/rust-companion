@@ -133,6 +133,55 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
 }
+
+/* RUST GAME MENU */
+header {
+  background: rgba(10, 20, 32, 0.94);
+  border-bottom: 1px solid #405a70;
+}
+
+nav {
+  background: rgba(12, 22, 34, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #49647b;
+  gap: 6px;
+}
+
+nav button {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: #c6d5e2;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+nav button.active {
+  background: #304b63;
+  border-bottom: 3px solid #ff791c;
+  color: white;
+}
+
+nav button:active {
+  transform: scale(0.96);
+}
+
+.welcome {
+  border-left: 4px solid #ff791c;
+  border-radius: 4px;
+}
+
+.card {
+  border-radius: 4px;
+  transition: transform 0.2s ease;
+}
+
+.card:active {
+  transform: scale(0.97);
+}
+
 </style>
 </head>
 <bod>
