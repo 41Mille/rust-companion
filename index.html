@@ -378,6 +378,13 @@ function show(id,btn){
  if(btn)btn.classList.add('active');
  window.scrollTo(0,0);
 }
+window.addEventListener('pageshow', () => {
+  const video = document.getElementById('winter-video');
+  if (video) {
+    video.muted = true;
+    video.play().catch(() => {});
+  }
+});
 function addPlayer(){
  let input=document.getElementById('player');
  if(!input.value.trim())return;
