@@ -842,6 +842,104 @@ function renderTrackedPlayers() {
 }
 
 
+/* STEAM API — LIVE PLAYER DATA */
+
+const STEAM_API =
+  'https://rustcompanionapi.y7nbfp68t8.workers.dev';
+
+async function loadSteamPlayer(card, steamid) {
+  const status = card.querySelector('.intel-status');
+  const name = card.querySelector('.intel-name');
+  const avatar = card.querySelector('.intel-avatar');
+  const last = card.querySelector('.intel-last');
+  const values = card.querySelectorAll('.intel-value');
+
+  status.textContent = '● ПРОВЕРКА...';
+
+  try {
+    const response = await fetch(
+      STEAM_API + '/player?steamid=' +
+      encodeURIComponent(steamid)
+    );
+
+    if (!response.ok) {
+      throw new Error('Steam API: ' + response.status);
+    }
+
+    const data = await response.json();
+
+    if (!card.isConnected) return;
+
+    name.textContent = data.name || 'Игрок Steam';
+
+    if (data.avatar) {
+      const img = document.createElement('img');
+      img.src = data.avatar;
+      img.alt = 'Аватар Steam';
+      img.style.cssText =
+        'width:100%;height:100%;object-fit:cover;border-radius:9px';
+
+      avatar.replaceChildren(img);
+    }
+
+    const state = Number(data.status);
+
+    if (state === 0) {
+      status.textContent = '● OFFLINE';
+      status.style.color = '#a1bfd5';
+    } else if (state === 1) {
+      status.textContent = '● ONLINE';
+      status.style.color = '#63e6a2';
+    } else if (state >= 2 && state <= 6) {
+      status.textContent = '● В СЕТИ';
+      status.style.color = '#63e6a2';
+    } else {
+      status.textContent = '● СТАТУС НЕИЗВЕСТЕН';
+    }
+
+    values[0].textContent = data.game || '—';
+
+    values[2].textContent = new Date()
+      .toLocaleTimeString('ru-RU', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+    last.textContent =
+      '● Последний онлайн: нет данных';
+
+  } catch (error) {
+    console.error('Steam tracker:', error);
+
+    if (!card.isConnected) return;
+
+    status.textContent = '● ОШИБКА API';
+    status.style.color = '#ff9d59';
+  }
+}
+
+/* Подключаем API к созданным карточкам */
+
+const originalRenderTrackedPlayers =
+  renderTrackedPlayers;
+
+renderTrackedPlayers = function() {
+  originalRenderTrackedPlayers();
+
+  const players = getTrackedPlayers();
+  const cards = document.querySelectorAll(
+    '#trackedPlayers .tracked-player'
+  );
+
+  cards.forEach((card, index) => {
+    const player = players[index];
+    if (player) {
+      loadSteamPlayer(card, player.id);
+    }
+  });
+};
+
+
 renderTrackedPlayers();
 
 </script>
