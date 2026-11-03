@@ -940,6 +940,99 @@ renderTrackedPlayers = function() {
 };
 
 
+/* STEAM NICKNAME HISTORY */
+
+async function loadSteamNicknames(card, steamid) {
+  const nickBox = card.querySelector('.intel-nicks');
+  if (!nickBox) return;
+
+  const count = nickBox.querySelector('.intel-value');
+  const history = nickBox.querySelector('.intel-history');
+
+  history.textContent = 'Загрузка истории...';
+
+  try {
+    const response = await fetch(
+      STEAM_API + '/history?steamid=' +
+      encodeURIComponent(steamid)
+    );
+
+    if (!response.ok) {
+      throw new Error('History API: ' + response.status);
+    }
+
+    const data = await response.json();
+
+    if (!card.isConnected) return;
+
+    const nicks = Array.isArray(data.history)
+      ? data.history
+      : [];
+
+    count.textContent = nicks.length;
+    history.replaceChildren();
+
+    if (!nicks.length) {
+      history.textContent =
+        'История ников пока не собрана.';
+      return;
+    }
+
+    nicks.forEach(item => {
+      const row = document.createElement('div');
+      row.style.cssText =
+        'padding:8px 0;border-bottom:1px solid #45678355';
+
+      const nickname = document.createElement('div');
+      nickname.style.fontWeight = '700';
+      nickname.textContent = item.nickname || 'Неизвестный ник';
+
+      const date = document.createElement('div');
+      date.style.cssText =
+        'font-size:11px;color:#a1bfd5;margin-top:4px';
+
+      date.textContent = item.first_seen
+        ? 'Впервые замечен: ' + item.first_seen
+        : 'Дата неизвестна';
+
+      row.append(nickname, date);
+      history.appendChild(row);
+    });
+
+  } catch (error) {
+    console.error('Nickname history:', error);
+
+    if (!card.isConnected) return;
+
+    count.textContent = '—';
+    history.textContent =
+      'Не удалось загрузить историю ников.';
+  }
+}
+
+/* Загружаем историю при открытии плитки */
+
+document.getElementById('trackedPlayers')
+  .addEventListener('toggle', event => {
+    const details = event.target;
+
+    if (
+      !details.matches?.('.intel-nicks') ||
+      !details.open
+    ) return;
+
+    const card = details.closest('.tracked-player');
+    if (!card) return;
+
+    const steamid = card.querySelector('.intel-id')
+      ?.textContent?.trim();
+
+    if (steamid) {
+      loadSteamNicknames(card, steamid);
+    }
+  }, true);
+
+
 renderTrackedPlayers();
 
 </script>
