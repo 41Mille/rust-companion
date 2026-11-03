@@ -643,18 +643,30 @@ function removeTrackedPlayer(id) {
   }
 }
 
-function renderTrackedPlayers() {
-  const container =
-    document.getElementById('trackedPlayers');
 
+function updateTrackedNote(id, value) {
+  const players = getTrackedPlayers();
+  const player = players.find(p => p.id === id);
+  if (!player) return;
+
+  player.note = value;
+
+  if (!saveTrackedPlayers(players)) {
+    document.getElementById('trackerMessage')
+      .textContent = 'Не удалось сохранить заметку.';
+  }
+}
+
+function renderTrackedPlayers() {
+  const container = document.getElementById('trackedPlayers');
   if (!container) return;
 
   container.replaceChildren();
+
   const players = getTrackedPlayers();
 
   if (!players.length) {
-    container.textContent =
-      'Пока нет отслеживаемых игроков.';
+    container.textContent = 'Пока нет отслеживаемых игроков.';
     return;
   }
 
@@ -662,31 +674,154 @@ function renderTrackedPlayers() {
     const card = document.createElement('div');
     card.className = 'tracked-player';
 
-    const name = document.createElement('strong');
-    name.textContent = 'Steam ID: ' + player.id;
+    const top = document.createElement('div');
+    top.className = 'intel-top';
 
-    const note = document.createElement('p');
-    note.textContent = player.note || 'Без заметки';
+    const brand = document.createElement('div');
+    brand.className = 'intel-brand';
+    brand.textContent = '⊕ RUST COMPANION';
 
-    const button = document.createElement('button');
-    button.textContent = 'Удалить';
-    button.addEventListener('click', () => {
-      removeTrackedPlayer(player.id);
+    const status = document.createElement('div');
+    status.className = 'intel-status';
+    status.textContent = '● СТАТУС НЕИЗВЕСТЕН';
+
+    top.append(brand, status);
+
+    const identity = document.createElement('div');
+    identity.className = 'intel-identity';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'intel-avatar';
+    avatar.textContent = '♙';
+
+    const info = document.createElement('div');
+    info.style.minWidth = '0';
+
+    const name = document.createElement('div');
+    name.className = 'intel-name';
+    name.textContent = player.name || 'Игрок Steam';
+
+    const id = document.createElement('div');
+    id.className = 'intel-id';
+    id.textContent = player.id;
+
+    const last = document.createElement('div');
+    last.className = 'intel-last';
+    last.textContent = '● Последний онлайн неизвестен';
+
+    info.append(name, id, last);
+    identity.append(avatar, info);
+
+    const stats = document.createElement('div');
+    stats.className = 'intel-stats';
+
+    function stat(label, value) {
+      const box = document.createElement('div');
+      box.className = 'intel-stat';
+
+      const title = document.createElement('div');
+      title.className = 'intel-label';
+      title.textContent = label;
+
+      const content = document.createElement('div');
+      content.className = 'intel-value';
+      content.textContent = value;
+
+      box.append(title, content);
+      return box;
+    }
+
+    stats.appendChild(stat('ИГРА', '—'));
+
+    const nickBox = document.createElement('details');
+    nickBox.className = 'intel-stat intel-nicks';
+
+    const nickSummary = document.createElement('summary');
+
+    const nickLabel = document.createElement('div');
+    nickLabel.className = 'intel-label';
+    nickLabel.textContent = 'НИКОВ ⌄';
+
+    const nickCount = document.createElement('div');
+    nickCount.className = 'intel-value';
+    nickCount.textContent =
+      Array.isArray(player.nicks) ? player.nicks.length : '—';
+
+    nickSummary.append(nickLabel, nickCount);
+
+    const nickHistory = document.createElement('div');
+    nickHistory.className = 'intel-history';
+
+    if (Array.isArray(player.nicks) && player.nicks.length) {
+      player.nicks.forEach(nick => {
+        const item = document.createElement('div');
+        item.textContent = nick;
+        nickHistory.appendChild(item);
+      });
+    } else {
+      nickHistory.textContent =
+        'История ников пока не собрана.';
+    }
+
+    nickBox.append(nickSummary, nickHistory);
+    stats.appendChild(nickBox);
+
+    stats.appendChild(stat('ПРОВЕРКА', '—'));
+
+    const divider = document.createElement('hr');
+    divider.className = 'intel-divider';
+
+    const noteTitle = document.createElement('div');
+    noteTitle.className = 'intel-note-title';
+    noteTitle.textContent = '▤ Личные заметки';
+
+    const note = document.createElement('textarea');
+    note.className = 'intel-note';
+    note.placeholder = 'Добавить заметку об игроке...';
+    note.maxLength = 1000;
+    note.value = player.note || '';
+
+    note.addEventListener('change', () => {
+      updateTrackedNote(player.id, note.value);
     });
 
-const profile = document.createElement('a');
-profile.href = 'https://steamcommunity.com/profiles/' + player.id;
-profile.target = '_blank';
-profile.rel = 'noopener noreferrer';
-profile.textContent = 'Открыть Steam-профиль';
-profile.style.cssText =
-  'display:block;color:#8fd3ff;margin:12px 0;';
-card.appendChild(profile);
+    const actions = document.createElement('div');
+    actions.className = 'intel-actions';
 
-    card.append(name, note, button);
+    const steam = document.createElement('a');
+    steam.className = 'intel-steam';
+    steam.href =
+      'https://steamcommunity.com/profiles/' +
+      encodeURIComponent(player.id);
+    steam.target = '_blank';
+    steam.rel = 'noopener noreferrer';
+    steam.textContent = '↗ Steam';
+
+    const remove = document.createElement('button');
+    remove.className = 'intel-remove';
+    remove.textContent = 'Удалить';
+    remove.addEventListener('click', () => {
+      if (confirm('Удалить игрока из трекера?')) {
+        removeTrackedPlayer(player.id);
+      }
+    });
+
+    actions.append(steam, remove);
+
+    card.append(
+      top,
+      identity,
+      stats,
+      divider,
+      noteTitle,
+      note,
+      actions
+    );
+
     container.appendChild(card);
   });
 }
+
 
 renderTrackedPlayers();
 
